@@ -6,12 +6,16 @@
 #include <QMap>
 
 namespace Numerology {
+static bool checkMasterNumbers(int number);
 
-static QPair<int, bool> checkMasterNumbers(int number);
-
-static QPair<int, bool> sumNumbers(int from)
+/*
+ * Sum numbers in an integer, one by one
+ *
+ * @param integer number to be summed
+ * @return tuple(result, masterNumberMatch (if any), masterNumberMatch (if happened))
+ */
+static std::tuple<int, int, bool> sumNumbers(int from)
 {
-    bool encounteredEleven = false;
     int x   = from;
     int res = 0;
 
@@ -19,44 +23,41 @@ static QPair<int, bool> sumNumbers(int from)
         res += x % 10;
         x    = x / 10;
     }
-    encounteredEleven = Numerology::checkMasterNumbers(res).second;
+    auto checkMasterResult = std::make_pair(res, Numerology::checkMasterNumbers(res));
     if (res % 10 > 0) {
         int temp = res;
         res  = res / 10;
         res += temp % 10;
     }
-    if ((res % 11 == 0) && (res != 0)) {
-        encounteredEleven = true;
-    }
-    return qMakePair(res, encounteredEleven);
+    return std::make_tuple(res, checkMasterResult.first, checkMasterResult.second);
 }
 
-static QPair<int, bool> checkMasterNumbers(int number)
+static bool checkMasterNumbers(int number)
 {
     switch (number) {
         case 11: {
-            return qMakePair(number, true);
+            return true;
         }
         case 22: {
-            return qMakePair(number, true);
+            return true;
         }
         case 33: {
-            return qMakePair(number, true);
+            return true;
         }
         case 13: {
-            return qMakePair(number, true);
+            return true;
         }
         case 14: {
-            return qMakePair(number, true);
+            return true;
         }
         case 16: {
-            return qMakePair(number, true);
+            return true;
         }
         case 19: {
-            return qMakePair(number, true);
+            return true;
         }
         default: {
-            return qMakePair(number, false);
+            return false;
         }
     }
 }
