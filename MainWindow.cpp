@@ -89,14 +89,23 @@ void MainWindow::on_pushButton_clicked()
     while (i.hasNext()) {
         i.next();
         int row = i.key() - 1;
-        auto firstElemValue = Numerology::sumNumbers(i.value().first);
+
+        auto firstElemValue = Numerology::sumNumbers(i.value().first);        
         if (firstElemValue.second) {
             ui_tableWidget->setItem(row, 0, new QTableWidgetItem(QString("(%1) %2").arg(i.value().first).arg(firstElemValue.first), 0));
         } else {
             ui_tableWidget->setItem(row, 0, new QTableWidgetItem(QString("%1").arg(firstElemValue.first), 0));
         }
-        ui_tableWidget->setItem(row, 1, new QTableWidgetItem(QString("%1").arg(i.value().second), 0));
+
+        auto secondElemValue = Numerology::sumNumbers(i.value().second);
+        if (secondElemValue.second) {
+            ui_tableWidget->setItem(row, 1, new QTableWidgetItem(QString("(%1) %2").arg(i.value().second).arg(secondElemValue.first), 0));
+        } else {
+            ui_tableWidget->setItem(row, 1, new QTableWidgetItem(QString("%1").arg(secondElemValue.first), 0));
+        }
+
         ui_tableWidget->setItem(row, 2, new QTableWidgetItem(Numerology::LifeCategories[i.key()], 0));
+
         ui_tableWidget->setItem(row, 3, new QTableWidgetItem(strList.at(row)));
     }
     ui_tableWidget->setColumnWidth(0, 30);
