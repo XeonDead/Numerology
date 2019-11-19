@@ -18,6 +18,10 @@ add_executable(Numerology
   MainWindow.cpp
   MainWindow.h
   MainWindow.ui
+  Numerology/Numerology.cpp
+  Numerology/Numerology.h
 )
+
+set(HEADERS Numerology)
 
 target_link_libraries(Numerology PRIVATE Qt5::Widgets Qt5::Charts)
