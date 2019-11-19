@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 
+#include "Numerology/Numerology.h"
+
 #include "./ui_MainWindow.h"
 
 QT_BEGIN_NAMESPACE
@@ -19,8 +21,10 @@ public:
 
 private slots:
     void on_pushButton_clicked();
+    void on_tableWidget_cellClicked(int row, int column);
 
 private:
     Ui::MainWindow *ui;
+    Numerology::Descriptions * _descriptions;
 };
 #endif // MAINWINDOW_H

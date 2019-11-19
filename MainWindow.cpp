@@ -7,10 +7,16 @@
 
 MainWindow::MainWindow(QWidget * parent)
     : QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    _descriptions(new Numerology::Descriptions(this))
 {
     ui->setupUi(this);
     QMetaObject::connectSlotsByName(this);
+
+    auto ui_descriptionScrollArea = findChild<QScrollArea *>("descriptionScrollArea");
+    ui_descriptionScrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    ui_descriptionScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+    ui_descriptionScrollArea->setWidgetResizable(true);
 }
 
 MainWindow::~MainWindow()
@@ -122,4 +128,12 @@ void MainWindow::on_pushButton_clicked()
     ui_tableWidget->setColumnWidth(2, 180);
     ui_tableWidget->setColumnWidth(3, 30);
     ui_tableWidget->setVerticalHeaderLabels(QStringList { "I", "II", "III", "IV", "V" });
+    ui_tableWidget->setEditTriggers(QTableWidget::EditTrigger::NoEditTriggers);
+}
+
+void MainWindow::on_tableWidget_cellClicked(int row, int column)
+{
+    auto label = findChild<QLabel *>("descriptionLabel");
+    auto table = findChild<QTableWidget *>("tableWidget");
+    label->setText(_descriptions->describe(table->item(row, column)->data(Qt::DisplayRole).toInt()));
 } // MainWindow::on_pushButton_clicked

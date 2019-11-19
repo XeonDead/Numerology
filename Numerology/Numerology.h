@@ -4,6 +4,8 @@
 #include <QObject>
 #include <QPair>
 #include <QMap>
+#include <QJsonDocument>
+#include <QJsonObject>
 
 namespace Numerology {
 static bool checkMasterNumbers(int number);
@@ -71,6 +73,18 @@ static QMap<int, QString> LifeCategories {
 };
 
 static const int NumerologyNumber = 27;
+
+class Descriptions : public QObject
+{
+    Q_OBJECT
+public:
+    Descriptions(QObject * parent);
+    ~Descriptions() = default;
+    QString describe(int number);
+protected:
+    QJsonDocument descriptionDoc;
+};
+
 }
 
 #endif // NUMEROLOGY_H
