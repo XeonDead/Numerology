@@ -51,7 +51,7 @@ void MainWindow::on_pushButton_clicked() {
 
   QValueAxis *axisX =
       qobject_cast<QtCharts::QValueAxis *>(chart->axes(Qt::Horizontal).first());
-  axisX->setRange(series->at(0).x(), series->at(-1).x());
+  axisX->setRange(series->at(0).x(), series->at(6).x());
   axisX->setTickCount(7);
   axisX->setTickType(QValueAxis::TickType::TicksFixed);
   axisX->setLabelFormat("%d");
