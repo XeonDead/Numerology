@@ -65,60 +65,13 @@
       <widget class="QTableWidget" name="tableWidget"/>
      </item>
      <item>
-      <widget class="QScrollArea" name="descriptionScrollArea">
-       <property name="minimumSize">
-        <size>
-         <width>200</width>
-         <height>0</height>
-        </size>
-       </property>
+      <widget class="QTextBrowser" name="descriptionTextBrowser">
        <property name="maximumSize">
         <size>
          <width>200</width>
          <height>16777215</height>
         </size>
        </property>
-       <property name="widgetResizable">
-        <bool>true</bool>
-       </property>
-       <widget class="QWidget" name="scrollAreaWidgetContents">
-        <property name="geometry">
-         <rect>
-          <x>0</x>
-          <y>0</y>
-          <width>198</width>
-          <height>187</height>
-         </rect>
-        </property>
-        <widget class="QLabel" name="descriptionLabel">
-         <property name="geometry">
-          <rect>
-           <x>0</x>
-           <y>0</y>
-           <width>200</width>
-           <height>189</height>
-          </rect>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>200</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>200</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="wordWrap">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </widget>
       </widget>
      </item>
     </layout>

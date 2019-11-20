@@ -8,23 +8,24 @@
 #include "./ui_MainWindow.h"
 
 QT_BEGIN_NAMESPACE
-namespace Ui { class MainWindow; }
+namespace Ui {
+class MainWindow;
+}
 QT_END_NAMESPACE
 
-class MainWindow : public QMainWindow
-{
-    Q_OBJECT
+class MainWindow : public QMainWindow {
+  Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+  MainWindow(QWidget *parent = nullptr);
+  ~MainWindow();
 
 private slots:
-    void on_pushButton_clicked();
-    void on_tableWidget_cellClicked(int row, int column);
+  void on_pushButton_clicked();
+  void on_tableWidget_cellClicked(int row, int column);
 
 private:
-    Ui::MainWindow *ui;
-    Numerology::Descriptions * _descriptions;
+  Ui::MainWindow *ui;
+  Numerology::Descriptions *_descriptions;
 };
 #endif // MAINWINDOW_H
