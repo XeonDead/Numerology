@@ -11,7 +11,7 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt5 COMPONENTS Widgets REQUIRED Charts REQUIRED)
+find_package(Qt5 COMPONENTS Widgets REQUIRED Charts REQUIRED PATHS E:/Qt/5.12.6/msvc2017_64/lib/cmake)
 
 add_executable(Numerology
   main.cpp
