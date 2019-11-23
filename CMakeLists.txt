@@ -24,4 +24,6 @@ add_executable(Numerology
 
 set(HEADERS Numerology)
 
+file(COPY resources/ DESTINATION resources/)
+
 target_link_libraries(Numerology PRIVATE Qt5::Widgets Qt5::Charts)

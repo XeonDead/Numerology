@@ -153,6 +153,14 @@ void MainWindow::on_tableWidget_cellClicked(int row, int column) {
   auto descriptionTextBrowser =
       findChild<QTextBrowser *>("descriptionTextBrowser");
   auto table = findChild<QTableWidget *>("tableWidget");
-  descriptionTextBrowser->setText(_descriptions->describe(
-      table->item(row, column)->data(Qt::DisplayRole).toInt()));
+  auto tableText = table->item(row, column)->data(Qt::DisplayRole).toString();
+  bool ok = false;
+  int tableNumber = tableText.toInt(&ok);
+  if (!ok) {
+      tableText.remove(0, 1);
+      int numParenthesis = tableText.indexOf(')');
+      tableText.remove(numParenthesis, tableText.count() - numParenthesis);
+      tableNumber = tableText.toInt(&ok);
+  }
+  descriptionTextBrowser->setText(_descriptions->describe(tableNumber));
 } // MainWindow::on_pushButton_clicked

@@ -25,15 +25,15 @@ static std::tuple<int, int, bool> sumNumbers(int from) {
     res += x % 10;
     x = x / 10;
   }
-  auto checkMasterResult =
-      std::make_pair(res, Numerology::checkMasterNumbers(res));
+  auto checkMaster =
+      std::make_pair(from, Numerology::checkMasterNumbers(from));
   if (res % 10 > 0) {
     int temp = res;
     res = res / 10;
     res += temp % 10;
   }
-  return std::make_tuple(res, checkMasterResult.first,
-                         checkMasterResult.second);
+  return std::make_tuple(res, checkMaster.first,
+                         checkMaster.second);
 }
 
 static bool checkMasterNumbers(int number) {
