@@ -24,8 +24,7 @@ void MainWindow::on_pushButton_clicked() {
   auto lifeNumber =
       Numerology::sumNumbers(dayNumber + monthNumber + std::get<0>(yearNumber));
   QString energy = QString("%1").arg(date.toString("ddMM").toInt() *
-                                         date.toString("yyyy").toInt(),
-                                     7, 10, QChar('0'));
+                                         date.toString("yyyy").toInt()).leftJustified(7, '0');
 
   QDate curYear = QDateTime::currentDateTime().date();
   QDate year = date;

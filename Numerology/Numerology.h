@@ -20,18 +20,30 @@ static bool checkMasterNumbers(int number);
 static std::tuple<int, int, bool> sumNumbers(int from) {
   int x = from;
   int res = 0;
+  auto checkMaster =
+      std::make_pair(from, Numerology::checkMasterNumbers(from));
 
   while (x > 0) {
     res += x % 10;
     x = x / 10;
+    if (!checkMaster.second) {
+        checkMaster = std::make_pair(res, Numerology::checkMasterNumbers(res));
+    }
   }
-  auto checkMaster =
-      std::make_pair(from, Numerology::checkMasterNumbers(from));
+
   if (res % 10 > 0) {
     int temp = res;
     res = res / 10;
     res += temp % 10;
+    if (!checkMaster.second) {
+        checkMaster = std::make_pair(res, Numerology::checkMasterNumbers(res));
+    }
   }
+
+  if (res == 10) {
+      res = res / 10;
+  }
+
   return std::make_tuple(res, checkMaster.first,
                          checkMaster.second);
 }
