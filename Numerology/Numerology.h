@@ -82,7 +82,9 @@ static QMap<int, QString> LifeCategories{
     {2, QObject::tr("Реализация")},
     {3, QObject::tr("Перезагрузка")},
     {4, QObject::tr("Новый виток жизни")},
-    {5, QObject::tr("")}};
+    {5, QObject::tr("")},
+    {6, QObject::tr("")},
+    {7, QObject::tr("")}};
 
 static const int NumerologyNumber = 27;
 

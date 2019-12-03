@@ -78,9 +78,17 @@ void MainWindow::on_pushButton_clicked() {
                                       peaksChallenges.value(4).first),
                              std::abs(peaksChallenges.value(3).second -
                                       peaksChallenges.value(4).second)});
+  peaksChallenges.insert(6, {std::abs(peaksChallenges.value(4).first +
+                                      peaksChallenges.value(5).first),
+                             std::abs(peaksChallenges.value(4).second -
+                                      peaksChallenges.value(5).second)});
+  peaksChallenges.insert(7, {std::abs(peaksChallenges.value(5).first +
+                                      peaksChallenges.value(6).first),
+                             std::abs(peaksChallenges.value(5).second -
+                                      peaksChallenges.value(6).second)});
 
   QStringList strList;
-  for (int i = 0; i < 5; ++i) {
+  for (int i = 0; i < 7; ++i) {
     if (strList.empty()) {
       strList.push_back(
           QString("%1-%2")
@@ -97,7 +105,7 @@ void MainWindow::on_pushButton_clicked() {
 
   auto ui_tableWidget = findChild<QTableWidget *>("tableWidget");
   ui_tableWidget->clear();
-  ui_tableWidget->setRowCount(5);
+  ui_tableWidget->setRowCount(7);
   ui_tableWidget->setColumnCount(4);
   QMapIterator<int, QPair<int, int>> i(peaksChallenges);
   while (i.hasNext()) {
@@ -144,7 +152,7 @@ void MainWindow::on_pushButton_clicked() {
   ui_tableWidget->setColumnWidth(2, 180);
   ui_tableWidget->setColumnWidth(3, 30);
   ui_tableWidget->setVerticalHeaderLabels(
-      QStringList{"I", "II", "III", "IV", "V"});
+      QStringList{"I", "II", "III", "IV", "V", "VI", "VII"});
   ui_tableWidget->setEditTriggers(QTableWidget::EditTrigger::NoEditTriggers);
 }
 
