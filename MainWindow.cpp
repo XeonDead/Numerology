@@ -41,6 +41,30 @@ void MainWindow::on_pushButton_clicked() {
     year = year.addYears(1);
   }
 
+  QStringList strList;
+  for (int i = 0; i < 7; ++i) {
+    if (strList.empty()) {
+      strList.push_back(
+          QString("%1-%2")
+              .arg(Numerology::NumerologyNumber - std::get<0>(lifeNumber))
+              .arg(Numerology::NumerologyNumber - std::get<0>(lifeNumber) +
+                   Numerology::NumerologyNumber / 3));
+    } else {
+      auto tempStr = strList.last();
+      int start = tempStr.remove(0, 3).toInt();
+      strList.push_back(QString("%1-%2").arg(start + 1).arg(
+          start + Numerology::NumerologyNumber / 3));
+    }
+  }
+
+  int periods = 4; // mostly const
+  int lastPeriodYear = QString(strList.at(3)).remove(0, 3).toInt();
+  int currentlyYears = curYear.year() - date.year();
+
+  if (currentlyYears > lastPeriodYear) {
+      periods = 7;
+  }
+
   QtCharts::QChart *chart = ui_chart->chart();
   chart->removeAllSeries();
   chart->addSeries(series);
@@ -62,95 +86,103 @@ void MainWindow::on_pushButton_clicked() {
   axisY->setTickInterval(1);
   axisY->setLabelFormat("%d");
 
-  QMap<int, QPair<int, int>> peaksChallenges;
+  QVector<int> peaks;
 
-  peaksChallenges.insert(1, {std::abs(dayNumber + monthNumber),
-                             std::abs(dayNumber - monthNumber)});
-  peaksChallenges.insert(2, {std::abs(dayNumber + std::get<0>(yearNumber)),
-                             std::abs(dayNumber - std::get<0>(yearNumber))});
-  peaksChallenges.insert(3, {std::abs(peaksChallenges.value(1).first +
-                                      peaksChallenges.value(2).first),
-                             std::abs(peaksChallenges.value(1).second -
-                                      peaksChallenges.value(2).second)});
-  peaksChallenges.insert(4, {std::abs(monthNumber + std::get<0>(yearNumber)),
-                             std::abs(monthNumber - std::get<0>(yearNumber))});
-  peaksChallenges.insert(5, {std::abs(peaksChallenges.value(3).first +
-                                      peaksChallenges.value(4).first),
-                             std::abs(peaksChallenges.value(3).second -
-                                      peaksChallenges.value(4).second)});
-  peaksChallenges.insert(6, {std::abs(peaksChallenges.value(4).first +
-                                      peaksChallenges.value(5).first),
-                             std::abs(peaksChallenges.value(4).second -
-                                      peaksChallenges.value(5).second)});
-  peaksChallenges.insert(7, {std::abs(peaksChallenges.value(5).first +
-                                      peaksChallenges.value(6).first),
-                             std::abs(peaksChallenges.value(5).second -
-                                      peaksChallenges.value(6).second)});
+  peaks.push_back(dayNumber + monthNumber);
+  peaks.push_back(dayNumber + std::get<0>(yearNumber));
+  peaks.push_back(peaks.at(0) + peaks.at(1));
+  peaks.push_back(monthNumber + std::get<0>(yearNumber));
+  if (periods > 4) {
+      peaks.push_back(peaks.at(2) + peaks.at(3));
+      peaks.push_back(peaks.at(3) + peaks.at(4));
+      peaks.push_back(peaks.at(4) + peaks.at(5));
+      peaks.push_back(peaks.at(5) + peaks.at(6));
+  }
 
-  QStringList strList;
-  for (int i = 0; i < 7; ++i) {
-    if (strList.empty()) {
-      strList.push_back(
-          QString("%1-%2")
-              .arg(Numerology::NumerologyNumber - std::get<0>(lifeNumber))
-              .arg(Numerology::NumerologyNumber - std::get<0>(lifeNumber) +
-                   Numerology::NumerologyNumber / 3));
-    } else {
-      auto tempStr = strList.last();
-      int start = tempStr.remove(0, 3).toInt();
-      strList.push_back(QString("%1-%2").arg(start + 1).arg(
-          start + Numerology::NumerologyNumber / 3));
-    }
+  QVector<int> challenges;
+
+  challenges.push_back(std::abs(dayNumber - monthNumber));
+  challenges.push_back(std::abs(dayNumber - std::get<0>(yearNumber)));
+  challenges.push_back(std::abs(challenges.at(0) - challenges.at(1)));
+  challenges.push_back(std::abs(monthNumber - std::get<0>(yearNumber)));
+  if (periods > 4) {
+      challenges.push_back(std::abs(challenges.at(2) - challenges.at(3)));
+      challenges.push_back(std::abs(challenges.at(3) - challenges.at(4)));
+      challenges.push_back(std::abs(challenges.at(4) - challenges.at(5)));
+      challenges.push_back(std::abs(challenges.at(5) - challenges.at(6)));
+  }
+
+  QVector<int> shadows;
+
+  shadows.push_back(std::get<0>(Numerology::sumNumbers(peaks.at(0) + date.day())));
+  shadows.push_back(std::get<0>(Numerology::sumNumbers(peaks.at(1) + date.month())));
+  shadows.push_back(std::get<0>(Numerology::sumNumbers(peaks.at(2) + date.year())));
+  shadows.push_back(std::get<0>(Numerology::sumNumbers(peaks.at(3) + std::get<0>(lifeNumber))));
+  if (periods > 4) {
+      shadows.push_back(std::get<0>(Numerology::sumNumbers(peaks.at(4) + date.day())));
+      shadows.push_back(std::get<0>(Numerology::sumNumbers(peaks.at(5) + date.month())));
+      shadows.push_back(std::get<0>(Numerology::sumNumbers(peaks.at(6) + date.year())));
+      shadows.push_back(std::get<0>(Numerology::sumNumbers(peaks.at(7) + std::get<0>(lifeNumber))));
+  }
+
+  QVector<int> exits;
+
+  for (int i = 0; i < periods; ++i) {
+      exits.push_back(std::get<0>(Numerology::sumNumbers(peaks.at(i)+challenges.at(i)+shadows.at(i))));
   }
 
   auto ui_tableWidget = findChild<QTableWidget *>("tableWidget");
   ui_tableWidget->clear();
-  ui_tableWidget->setRowCount(7);
-  ui_tableWidget->setColumnCount(4);
-  QMapIterator<int, QPair<int, int>> i(peaksChallenges);
-  while (i.hasNext()) {
-    i.next();
-    int row = i.key() - 1;
+  ui_tableWidget->setRowCount(periods);
+  ui_tableWidget->setColumnCount(6);
 
-    auto firstElemValue = Numerology::sumNumbers(i.value().first);
+  for (int i = 0; i < periods; ++i) {
+
+    ui_tableWidget->setItem(i, 0, new QTableWidgetItem(QString("%1").arg(shadows.at(i))));
+
+    auto firstElemValue = Numerology::sumNumbers(peaks.at(i));
     if (std::get<2>(firstElemValue)) {
       ui_tableWidget->setItem(
-          row, 0,
+          i, 1,
           new QTableWidgetItem(QString("(%1) %2")
                                    .arg(std::get<1>(firstElemValue))
                                    .arg(std::get<0>(firstElemValue)),
                                0));
     } else {
       ui_tableWidget->setItem(
-          row, 0,
+          i, 1,
           new QTableWidgetItem(QString("%1").arg(std::get<0>(firstElemValue)),
                                0));
     }
 
-    auto secondElemValue = Numerology::sumNumbers(i.value().second);
+    auto secondElemValue = Numerology::sumNumbers(challenges.at(i));
     if (std::get<2>(secondElemValue)) {
       ui_tableWidget->setItem(
-          row, 1,
+          i, 2,
           new QTableWidgetItem(QString("(%1) %2")
                                    .arg(std::get<1>(secondElemValue))
                                    .arg(std::get<0>(secondElemValue)),
                                0));
     } else {
       ui_tableWidget->setItem(
-          row, 1,
+          i, 2,
           new QTableWidgetItem(QString("%1").arg(std::get<0>(secondElemValue)),
                                0));
     }
 
-    ui_tableWidget->setItem(
-        row, 2, new QTableWidgetItem(Numerology::LifeCategories[i.key()], 0));
+    ui_tableWidget->setItem(i, 3, new QTableWidgetItem(QString("%1").arg(exits.at(i))));
 
-    ui_tableWidget->setItem(row, 3, new QTableWidgetItem(strList.at(row)));
+    ui_tableWidget->setItem(
+        i, 4, new QTableWidgetItem(Numerology::LifeCategories[i], 0));
+
+    ui_tableWidget->setItem(i, 5, new QTableWidgetItem(strList.at(i)));
   }
   ui_tableWidget->setColumnWidth(0, 30);
   ui_tableWidget->setColumnWidth(1, 30);
-  ui_tableWidget->setColumnWidth(2, 180);
+  ui_tableWidget->setColumnWidth(2, 30);
   ui_tableWidget->setColumnWidth(3, 30);
+  ui_tableWidget->setColumnWidth(4, 180);
+  ui_tableWidget->setColumnWidth(5, 30);
   ui_tableWidget->setVerticalHeaderLabels(
       QStringList{"I", "II", "III", "IV", "V", "VI", "VII"});
   ui_tableWidget->setEditTriggers(QTableWidget::EditTrigger::NoEditTriggers);
