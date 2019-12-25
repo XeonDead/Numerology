@@ -18,11 +18,11 @@ void MainWindow::on_pushButton_clicked() {
   auto ui_dateEdit = findChild<QDateEdit *>("dateEdit");
   auto date = ui_dateEdit->date();
 
-  auto dayNumber = date.day();
-  auto monthNumber = date.month();
+  auto dayNumber = Numerology::sumNumbers(date.day());
+  auto monthNumber = Numerology::sumNumbers(date.month());
   auto yearNumber = Numerology::sumNumbers(date.year());
   auto lifeNumber =
-      Numerology::sumNumbers(dayNumber + monthNumber + std::get<0>(yearNumber));
+      Numerology::sumNumbers(std::get<0>(dayNumber) + std::get<0>(monthNumber) + std::get<0>(yearNumber));
   QString energy = QString("%1").arg(date.toString("ddMM").toInt() *
                                          date.toString("yyyy").toInt()).leftJustified(7, '0');
 
@@ -88,10 +88,10 @@ void MainWindow::on_pushButton_clicked() {
 
   QVector<int> peaks;
 
-  peaks.push_back(dayNumber + monthNumber);
-  peaks.push_back(dayNumber + std::get<0>(yearNumber));
+  peaks.push_back(std::get<0>(dayNumber) + std::get<0>(monthNumber));
+  peaks.push_back(std::get<0>(dayNumber) + std::get<0>(yearNumber));
   peaks.push_back(peaks.at(0) + peaks.at(1));
-  peaks.push_back(monthNumber + std::get<0>(yearNumber));
+  peaks.push_back(std::get<0>(monthNumber) + std::get<0>(yearNumber));
   if (periods > 4) {
       peaks.push_back(peaks.at(2) + peaks.at(3));
       peaks.push_back(peaks.at(3) + peaks.at(4));
@@ -101,10 +101,10 @@ void MainWindow::on_pushButton_clicked() {
 
   QVector<int> challenges;
 
-  challenges.push_back(std::abs(dayNumber - monthNumber));
-  challenges.push_back(std::abs(dayNumber - std::get<0>(yearNumber)));
+  challenges.push_back(std::abs(std::get<0>(dayNumber) - std::get<0>(monthNumber)));
+  challenges.push_back(std::abs(std::get<0>(dayNumber) - std::get<0>(yearNumber)));
   challenges.push_back(std::abs(challenges.at(0) - challenges.at(1)));
-  challenges.push_back(std::abs(monthNumber - std::get<0>(yearNumber)));
+  challenges.push_back(std::abs(std::get<0>(monthNumber) - std::get<0>(yearNumber)));
   if (periods > 4) {
       challenges.push_back(std::abs(challenges.at(2) - challenges.at(3)));
       challenges.push_back(std::abs(challenges.at(3) - challenges.at(4)));
