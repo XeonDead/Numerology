@@ -7,7 +7,7 @@ using namespace Numerology;
 
 CulminationModel::CulminationModel(QObject * parent)
     : QAbstractTableModel(parent),
-      rowCountStore(4)
+    rowCountStore(4)
 { }
 
 QVariant CulminationModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -31,7 +31,7 @@ QVariant CulminationModel::headerData(int section, Qt::Orientation orientation, 
         } else { return QVariant(); }
     } else if (orientation == Qt::Orientation::Vertical) {
         if (role == Qt::DisplayRole) {
-            return Numerology::to_roman(section+1);
+            return Numerology::to_roman(section + 1);
         } else { return QVariant(); }
     }
     return QVariant();
@@ -71,16 +71,16 @@ QVariant CulminationModel::data(const QModelIndex &index, int role) const
                     return QString("(%1) %2").arg(exits.at(index.row()).first).arg(exits.at(index.row()).second);
                 }
             }
-        case 4: {
-            return Numerology::LifeCategories[index.row()];
-        }
-        case 5: {
-            return strList.at(index.row());
-        }
+            case 4: {
+                return Numerology::LifeCategories[index.row()];
+            }
+            case 5: {
+                return strList.at(index.row());
+            }
         }
     }
     return QVariant();
-}
+} // CulminationModel::data
 
 int CulminationModel::rowCount(const QModelIndex &parent) const
 {
@@ -94,9 +94,9 @@ int CulminationModel::columnCount(const QModelIndex &parent) const
     return 6;
 }
 
-void CulminationModel::setRowCount(int rowCount)
+void CulminationModel::setRowCount(int rowCountNew)
 {
-    rowCountStore = rowCount;
+    rowCountStore = rowCountNew;
 }
 
 void CulminationModel::clear()
@@ -120,18 +120,18 @@ void CulminationModel::setDate(const QDate &date)
     //    QString energy = QString("%1").arg(date.toString("ddMM").toInt() * date.toString("yyyy").toInt()).leftJustified(7, '0');
 
     for (int i = 0; i < 7; ++i) {
-      if (strList.empty()) {
-        strList.push_back(
-            QString("%1-%2")
+        if (strList.empty()) {
+            strList.push_back(
+                QString("%1-%2")
                 .arg(Numerology::NumerologyNumber - lifeNumber.second)
-                .arg(Numerology::NumerologyNumber - lifeNumber.second +
-                     Numerology::NumerologyNumber / 3));
-      } else {
-        auto tempStr = strList.last();
-        int start = tempStr.remove(0, 3).toInt();
-        strList.push_back(QString("%1-%2").arg(start + 1).arg(
-            start + Numerology::NumerologyNumber / 3));
-      }
+                .arg(Numerology::NumerologyNumber - lifeNumber.second
+                + Numerology::NumerologyNumber / 3));
+        } else {
+            auto tempStr = strList.last();
+            int start    = tempStr.remove(0, 3).toInt();
+            strList.push_back(QString("%1-%2").arg(start + 1).arg(
+                  start + Numerology::NumerologyNumber / 3));
+        }
     }
 
     peaks.push_back(Numerology::sumNumbers(dayNumber.second + monthNumber.second));

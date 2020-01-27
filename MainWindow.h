@@ -15,19 +15,18 @@ class MainWindow;
 QT_END_NAMESPACE
 
 class MainWindow : public QMainWindow {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-  MainWindow(QWidget *parent = nullptr);
-  ~MainWindow();
+    MainWindow(QWidget * parent = nullptr);
+    ~MainWindow();
 
 private slots:
-  void on_pushButton_clicked();
-//  void on_tableWidget_cellClicked(int row, int column);
+    void on_pushButton_clicked();
 
 private:
-  Ui::MainWindow *ui;
-  Numerology::Descriptions * _descriptions;
-  Numerology::CulminationModel * _culminationModel;
+    Ui::MainWindow * ui;
+    Numerology::Descriptions * _descriptions;
+    Numerology::CulminationModel * _culminationModel;
 };
 #endif // MAINWINDOW_H

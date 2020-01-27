@@ -22,11 +22,6 @@ void MainWindow::on_pushButton_clicked()
     _culminationModel->clear();
     _culminationModel->setDate(date);
 
-    auto dayNumber   = Numerology::sumNumbers(date.day());
-    auto monthNumber = Numerology::sumNumbers(date.month());
-    auto yearNumber  = Numerology::sumNumbers(date.year());
-    auto lifeNumber  =
-      Numerology::sumNumbers(dayNumber.second + monthNumber.second + yearNumber.second);
     QString energy = QString("%1").arg(date.toString("ddMM").toInt()
         * date.toString("yyyy").toInt()).leftJustified(7, '0');
 
@@ -45,24 +40,8 @@ void MainWindow::on_pushButton_clicked()
         year = year.addYears(1);
     }
 
-    QStringList strList;
-    for (int i = 0; i < 7; ++i) {
-        if (strList.empty()) {
-            strList.push_back(
-                QString("%1-%2")
-                .arg(Numerology::NumerologyNumber - lifeNumber.second)
-                .arg(Numerology::NumerologyNumber - lifeNumber.second
-                + Numerology::NumerologyNumber / 3));
-        } else {
-            auto tempStr = strList.last();
-            int start    = tempStr.remove(0, 3).toInt();
-            strList.push_back(QString("%1-%2").arg(start + 1).arg(
-                  start + Numerology::NumerologyNumber / 3));
-        }
-    }
-
     int periods        = 4; // mostly const
-    int lastPeriodYear = QString(strList.at(3)).remove(0, 3).toInt();
+    int lastPeriodYear = _culminationModel->data(_culminationModel->index(3, 5)).toString().remove(0, 3).toInt();
     int currentlyYears = curYear.year() - date.year();
 
     if (currentlyYears > lastPeriodYear) {
@@ -93,6 +72,7 @@ void MainWindow::on_pushButton_clicked()
     axisY->setLabelFormat("%d");
 
     auto ui_tableView = findChild<QTableView *>("tableView");
+    ui_tableView->reset();
 
     ui_tableView->setModel(_culminationModel);
 
@@ -104,19 +84,3 @@ void MainWindow::on_pushButton_clicked()
     ui_tableView->setColumnWidth(5, 30);
     ui_tableView->setEditTriggers(QTableView::EditTrigger::NoEditTriggers);
 } // MainWindow::on_pushButton_clicked
-
-// void MainWindow::on_tableWidget_cellClicked(int row, int column) {
-//  auto descriptionTextBrowser =
-//      findChild<QTextBrowser *>("descriptionTextBrowser");
-//  auto table = findChild<QTableView *>("tableView");
-//  auto tableText = table->currentIndex().data(Qt::DisplayRole).toString();
-//  bool ok = false;
-//  int tableNumber = tableText.toInt(&ok);
-//  if (!ok) {
-//      tableText.remove(0, 1);
-//      int numParenthesis = tableText.indexOf(')');
-//      tableText.remove(numParenthesis, tableText.count() - numParenthesis);
-//      tableNumber = tableText.toInt(&ok);
-//  }
-//  descriptionTextBrowser->setText(_descriptions->describe(tableNumber));
-// }
