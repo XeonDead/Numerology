@@ -4,8 +4,9 @@
 #include <QMainWindow>
 
 #include "Numerology/Numerology.h"
+#include "Numerology/CulminationModel.h"
 
-#include "./ui_MainWindow.h"
+#include "ui_MainWindow.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -22,10 +23,11 @@ public:
 
 private slots:
   void on_pushButton_clicked();
-  void on_tableWidget_cellClicked(int row, int column);
+//  void on_tableWidget_cellClicked(int row, int column);
 
 private:
   Ui::MainWindow *ui;
-  Numerology::Descriptions *_descriptions;
+  Numerology::Descriptions * _descriptions;
+  Numerology::CulminationModel * _culminationModel;
 };
 #endif // MAINWINDOW_H

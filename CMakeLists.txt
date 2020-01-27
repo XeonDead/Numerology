@@ -20,6 +20,8 @@ add_executable(Numerology
   MainWindow.ui
   Numerology/Numerology.cpp
   Numerology/Numerology.h
+  Numerology/CulminationModel.cpp
+  Numerology/CulminationModel.h
 )
 
 set(HEADERS Numerology)
