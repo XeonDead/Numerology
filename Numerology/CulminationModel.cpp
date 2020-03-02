@@ -153,13 +153,13 @@ void CulminationModel::setDate(const QDate &date)
     challenges.push_back(Numerology::sumNumbers(std::abs(challenges.at(5).second - challenges.at(6).second)));
 
     shadows.push_back(Numerology::sumNumbers(peaks.at(0).second + date.day()));
-    shadows.push_back((Numerology::sumNumbers(peaks.at(1).second + date.month())));
-    shadows.push_back((Numerology::sumNumbers(peaks.at(2).second + date.year())));
-    shadows.push_back((Numerology::sumNumbers(peaks.at(3).second + lifeNumber.second)));
+    shadows.push_back(Numerology::sumNumbers(peaks.at(1).second + date.month()));
+    shadows.push_back(Numerology::sumNumbers(peaks.at(2).second + date.year()));
+    shadows.push_back(Numerology::sumNumbers(peaks.at(3).second + lifeNumber.second));
     shadows.push_back(Numerology::sumNumbers(peaks.at(4).second + date.day()));
-    shadows.push_back((Numerology::sumNumbers(peaks.at(5).second + date.month())));
-    shadows.push_back((Numerology::sumNumbers(peaks.at(6).second + date.year())));
-    shadows.push_back((Numerology::sumNumbers(peaks.at(7).second + lifeNumber.second)));
+    shadows.push_back(Numerology::sumNumbers(peaks.at(5).second + date.month()));
+    shadows.push_back(Numerology::sumNumbers(peaks.at(6).second + date.year()));
+    shadows.push_back(Numerology::sumNumbers(peaks.at(7).second + lifeNumber.second));
 
     for (int i = 0; i < 8; ++i) {
         exits.push_back((Numerology::sumNumbers(peaks.at(i).second + challenges.at(i).second + shadows.at(i).second)));

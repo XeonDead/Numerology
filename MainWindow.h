@@ -5,6 +5,7 @@
 
 #include "Numerology/Numerology.h"
 #include "Numerology/CulminationModel.h"
+#include "Numerology/DayNumberModel.h"
 
 #include "ui_MainWindow.h"
 
@@ -23,10 +24,12 @@ public:
 
 private slots:
     void on_pushButton_clicked();
+    void on_comboBox_currentIndexChanged(int index);
 
 private:
     Ui::MainWindow * ui;
     Numerology::Descriptions * _descriptions;
     Numerology::CulminationModel * _culminationModel;
+    Numerology::DayNumberModel * _dayNumberModel;
 };
 #endif // MAINWINDOW_H

@@ -49,7 +49,7 @@ static QPair<int, int> sumNumbers(int from)
         }
     }
 
-    if (res == 10) {
+    if (res % 10 == 0) {
         res = res / 10;
     }
 
@@ -113,10 +113,11 @@ static QString to_roman(unsigned int value)
 }
 
 static QMap<int, QString> LifeCategories{
-    { 1, QObject::tr("Поиск предназначения") },
-    { 2, QObject::tr("Реализация") },
-    { 3, QObject::tr("Перезагрузка") },
-    { 4, QObject::tr("Новый виток жизни") },
+    { 0, QObject::tr("Поиск предназначения") },
+    { 1, QObject::tr("Реализация") },
+    { 2, QObject::tr("Перезагрузка") },
+    { 3, QObject::tr("Новый виток жизни") },
+    { 4, QObject::tr("") },
     { 5, QObject::tr("") },
     { 6, QObject::tr("") },
     { 7, QObject::tr("") } };
