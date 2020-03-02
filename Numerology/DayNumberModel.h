@@ -6,7 +6,6 @@
 #include "NumerologyDayNumber.h"
 
 namespace Numerology {
-
 class DayNumberModel : public QAbstractTableModel
 {
 public:

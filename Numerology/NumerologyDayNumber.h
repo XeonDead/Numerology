@@ -5,7 +5,6 @@
 #include <QtCore/QDate>
 
 namespace Numerology {
-
 class NumerologyDayNumber : public QObject
 {
     Q_OBJECT

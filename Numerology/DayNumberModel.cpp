@@ -5,7 +5,7 @@
 
 using namespace Numerology;
 
-DayNumberModel::DayNumberModel(QObject *parent)
+DayNumberModel::DayNumberModel(QObject * parent)
     : QAbstractTableModel(parent)
 { }
 
@@ -14,12 +14,12 @@ QVariant DayNumberModel::headerData(int section, Qt::Orientation orientation, in
     if (orientation == Qt::Orientation::Horizontal) {
         if (role == Qt::DisplayRole) {
             switch (section) {
-            case 0: {
-                return QObject::tr("Date");
-            }
-            case 1: {
-                return QObject::tr("DayNumber");
-            }
+                case 0: {
+                    return QObject::tr("Date");
+                }
+                case 1: {
+                    return QObject::tr("DayNumber");
+                }
             }
         } else { return QVariant(); }
     }
@@ -31,7 +31,6 @@ QVariant DayNumberModel::data(const QModelIndex &index, int role) const
     if (role != Qt::DisplayRole) {
         return QVariant();
     } else {
-
         switch (index.column()) {
             case 0: { // Date
                 QDate newDate = _firstDate.addDays(index.row());
@@ -67,12 +66,12 @@ void DayNumberModel::clear()
 
 void DayNumberModel::setBirthDate(const QDate &birthDate)
 {
-    _birthDate = birthDate;
+    _birthDate      = birthDate;
     _birthdayNumber = new NumerologyDayNumber(_birthDate, this);
 }
 
 void DayNumberModel::setDateRange(const QDate &firstDate, const QDate &secondDate)
 {
-    _firstDate = firstDate;
+    _firstDate  = firstDate;
     _secondDate = secondDate;
 }
