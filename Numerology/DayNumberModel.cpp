@@ -31,24 +31,54 @@ QVariant DayNumberModel::data(const QModelIndex &index, int role) const
     if (role != Qt::DisplayRole) {
         return QVariant();
     } else {
-        switch (index.column()) {
-            case 0: { // Date
-                QDate newDate = _firstDate.addDays(index.row());
-                return newDate;
+        if (index.row() == 0) {
+            switch (index.column()) {
+                case 0: { // Date
+                    return _firstDate.year();
+                }
+                case 1: { // DayNumber
+                    QDate newDate = QDate(_firstDate.year(), 1, 1);
+                    return _birthdayNumber->getYearString(newDate);
+                }
             }
-            case 1: { // DayNumber
-                QDate newDate = _firstDate.addDays(index.row());
-                return _birthdayNumber->getDayString(newDate);
+        } else if (index.row() == 1) {
+            switch (index.column()) {
+                case 0: { // Date
+                    return _firstDate.toString("MM.yyyy");
+                }
+                case 1: { // DayNumber
+                    return _birthdayNumber->getMonthString(_firstDate);
+                }
+            }
+        } else if ((index.row() == 2) && (months == 2)) {
+            switch (index.column()) {
+                case 0: { // Date
+                    return _secondDate.toString("MM.yyyy");
+                }
+                case 1: { // DayNumber
+                    return _birthdayNumber->getMonthString(_secondDate);
+                }
+            }
+        } else {
+            switch (index.column()) {
+                case 0: { // Date
+                    QDate newDate = _firstDate.addDays(index.row() - years - months);
+                    return newDate;
+                }
+                case 1: { // DayNumber
+                    QDate newDate = _firstDate.addDays(index.row() - years - months);
+                    return _birthdayNumber->getDayString(newDate);
+                }
             }
         }
     }
     return QVariant();
-}
+} // DayNumberModel::data
 
 int DayNumberModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent)
-    return _firstDate.daysTo(_secondDate);
+    return years + months + _firstDate.daysTo(_secondDate);
 }
 
 int DayNumberModel::columnCount(const QModelIndex &parent) const
@@ -74,4 +104,5 @@ void DayNumberModel::setDateRange(const QDate &firstDate, const QDate &secondDat
 {
     _firstDate  = firstDate;
     _secondDate = secondDate;
+    if ((firstDate.daysTo(secondDate)) > 30) months = 2;
 }

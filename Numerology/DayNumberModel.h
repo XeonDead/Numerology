@@ -20,6 +20,8 @@ public:
     void setBirthDate(const QDate& birthDate);
     void setDateRange(const QDate& firstDate, const QDate& secondDate);
 private:
+    const int years = 1;
+    int months = 1;
     QDate _birthDate;
     QDate _firstDate;
     QDate _secondDate;
