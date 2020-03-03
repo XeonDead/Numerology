@@ -104,5 +104,5 @@ void DayNumberModel::setDateRange(const QDate &firstDate, const QDate &secondDat
 {
     _firstDate  = firstDate;
     _secondDate = secondDate;
-    if ((firstDate.daysTo(secondDate)) > 30) months = 2;
+    months = (firstDate.daysTo(secondDate) / 30) + 1;
 }
