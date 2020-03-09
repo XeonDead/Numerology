@@ -1,108 +1,141 @@
+#include "DayNumberModel.h"
+
 #include <QDate>
 
 #include "Numerology.h"
-#include "DayNumberModel.h"
 
 using namespace Numerology;
 
-DayNumberModel::DayNumberModel(QObject * parent)
-    : QAbstractTableModel(parent)
-{ }
+DayNumberModel::DayNumberModel(QObject *parent) : QAbstractTableModel(parent) {}
 
-QVariant DayNumberModel::headerData(int section, Qt::Orientation orientation, int role) const
-{
-    if (orientation == Qt::Orientation::Horizontal) {
-        if (role == Qt::DisplayRole) {
-            switch (section) {
-                case 0: {
-                    return QObject::tr("Date");
-                }
-                case 1: {
-                    return QObject::tr("DayNumber");
-                }
-            }
-        } else { return QVariant(); }
-    }
-    return QVariant();
-}
-
-QVariant DayNumberModel::data(const QModelIndex &index, int role) const
-{
-    if (role != Qt::DisplayRole) {
-        return QVariant();
-    } else {
-        if (index.row() == 0) {
-            switch (index.column()) {
-                case 0: { // Date
-                    return _firstDate.year();
-                }
-                case 1: { // DayNumber
-                    QDate newDate = QDate(_firstDate.year(), 1, 1);
-                    return _birthdayNumber->getYearString(newDate);
-                }
-            }
-        } else if (index.row() == 1) {
-            switch (index.column()) {
-                case 0: { // Date
-                    return _firstDate.toString("MM.yyyy");
-                }
-                case 1: { // DayNumber
-                    return _birthdayNumber->getMonthString(_firstDate);
-                }
-            }
-        } else if ((index.row() == 2) && (months == 2)) {
-            switch (index.column()) {
-                case 0: { // Date
-                    return _secondDate.toString("MM.yyyy");
-                }
-                case 1: { // DayNumber
-                    return _birthdayNumber->getMonthString(_secondDate);
-                }
-            }
-        } else {
-            switch (index.column()) {
-                case 0: { // Date
-                    QDate newDate = _firstDate.addDays(index.row() - years - months);
-                    return newDate;
-                }
-                case 1: { // DayNumber
-                    QDate newDate = _firstDate.addDays(index.row() - years - months);
-                    return _birthdayNumber->getDayString(newDate);
-                }
-            }
+QVariant DayNumberModel::headerData(int section, Qt::Orientation orientation,
+                                    int role) const {
+  if (orientation == Qt::Orientation::Horizontal) {
+    if (role == Qt::DisplayRole) {
+      switch (section) {
+        case 0: {
+          return QObject::tr("Date");
         }
+        case 1: {
+          return QObject::tr("DayNumber");
+        }
+      }
+    } else {
+      return QVariant();
     }
+  }
+  return QVariant();
+}
+
+QVariant DayNumberModel::data(const QModelIndex &index, int role) const {
+  if (role != Qt::DisplayRole) {
     return QVariant();
-} // DayNumberModel::data
+  } else {
+    switch (index.column()) {
+      case 0: {
+        return _numbers.at(index.row()).first;
+      }
+      case 1: {
+        return _numbers.at(index.row()).second;
+      }
+    }
+  }
+  return QVariant();
+}  // DayNumberModel::data
 
-int DayNumberModel::rowCount(const QModelIndex &parent) const
-{
-    Q_UNUSED(parent)
-    return years + months + _firstDate.daysTo(_secondDate);
+int DayNumberModel::rowCount(const QModelIndex &parent) const {
+  Q_UNUSED(parent)
+  return _numbers.length();
 }
 
-int DayNumberModel::columnCount(const QModelIndex &parent) const
-{
-    Q_UNUSED(parent)
-    return 2;
+int DayNumberModel::columnCount(const QModelIndex &parent) const {
+  Q_UNUSED(parent)
+  return 2;
 }
 
-void DayNumberModel::clear()
-{
-    _birthDate.setDate(0, 0, 0);
-    _firstDate.setDate(0, 0, 0);
-    _secondDate.setDate(0, 0, 0);
+void DayNumberModel::clear() { _numbers.clear(); }
+
+void DayNumberModel::setBirthDate(const QDate &birthDate) {
+  _birthDate = birthDate;
+  _numbers.push_back(
+      qMakePair(birthDate.toString("dd.MM.yyyy"),
+                getDateNumber(DateNumberType::BirthDay, birthDate)));
 }
 
-void DayNumberModel::setBirthDate(const QDate &birthDate)
-{
-    _birthDate      = birthDate;
-    _birthdayNumber = new NumerologyDayNumber(_birthDate, this);
+void DayNumberModel::setDateRange(const QDate &firstDate,
+                                  const QDate &secondDate) {
+  int years = (secondDate.year() - firstDate.year()) + 1;
+  int months = (secondDate.month() - firstDate.month()) + 1;
+  int days = firstDate.daysTo(secondDate);
+
+  for (int i = 0; i < years; ++i) {
+    QDate date = firstDate.addYears(i);
+    _numbers.push_back(qMakePair(date.toString("yyyy"),
+                                 getDateNumber(DateNumberType::Year, date)));
+  }
+  for (int i = 0; i < months; ++i) {
+    QDate date = firstDate.addMonths(i);
+    _numbers.push_back(qMakePair(date.toString("MM.yyyy"),
+                                 getDateNumber(DateNumberType::Month, date)));
+  }
+  for (int i = 0; i <= days; ++i) {
+    QDate date = firstDate.addDays(i);
+    _numbers.push_back(qMakePair(date.toString("dd.MM.yyyy"),
+                                 getDateNumber(DateNumberType::Day, date)));
+  }
 }
 
-void DayNumberModel::setDateRange(const QDate &firstDate, const QDate &secondDate)
-{
-    _firstDate  = firstDate;
-    _secondDate = secondDate;
-    months = (firstDate.daysTo(secondDate) / 30) + 1;
+const QString DayNumberModel::getDateNumber(const DateNumberType &type,
+                                            const QDate &date) {
+  int firstNumber = 0;
+  int secondNumber = 0;
+  int thirdNumber = 0;
+  int fourthNumber = 0;
+
+  if (type != DateNumberType::BirthDay) {
+    QString birthdayStringThisYear =
+        date.toString("yyyy") + _birthDate.toString("MMdd");
+    for (const auto i : birthdayStringThisYear) {
+      if (i.isDigit()) firstNumber += i.digitValue();
+    }
+  }
+
+  QString dateString;
+  switch (type) {
+    case BirthDay: {
+      dateString = date.toString("yyyyMMdd");
+      break;
+    }
+    case Day: {
+      dateString = date.toString("MMdd");
+      break;
+    }
+    case Month: {
+      dateString = date.toString("MM");
+      break;
+    }
+    case Year: {
+      break;
+    }
+  }
+
+  for (const auto i : dateString) {
+    if (i.isDigit()) firstNumber += i.digitValue();
+  }
+
+  for (const auto i : QString("%1").arg(firstNumber)) {
+    if (i.isDigit()) secondNumber += i.digitValue();
+  }
+
+  thirdNumber = firstNumber - (date.toString("d").front().digitValue() * 2);
+
+  for (const auto i : QString("%1").arg(thirdNumber)) {
+    if (i.isDigit()) fourthNumber += i.digitValue();
+  }
+
+  return QString("%1.%2.%3.%4")
+      .arg(firstNumber)
+      .arg(secondNumber)
+      .arg(thirdNumber)
+      .arg(fourthNumber);
 }

@@ -3,11 +3,17 @@
 
 #include <QtCore/QAbstractTableModel>
 #include <QtCore/QDate>
-#include "NumerologyDayNumber.h"
 
 namespace Numerology {
 class DayNumberModel : public QAbstractTableModel
 {
+    enum DateNumberType {
+        BirthDay = 0,
+        Day,
+        Month,
+        Year
+    };
+
 public:
     DayNumberModel(QObject * parent);
 
@@ -20,12 +26,10 @@ public:
     void setBirthDate(const QDate& birthDate);
     void setDateRange(const QDate& firstDate, const QDate& secondDate);
 private:
-    const int years = 1;
-    int months = 1;
+    const QString getDateNumber(const DateNumberType& type, const QDate& date);
+
+    QList<QPair<QString, QString>> _numbers;
     QDate _birthDate;
-    QDate _firstDate;
-    QDate _secondDate;
-    NumerologyDayNumber * _birthdayNumber;
 };
 } // Numerology
 
