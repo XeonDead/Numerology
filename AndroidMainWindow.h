@@ -7,7 +7,7 @@
 #include "Numerology/CulminationModel.h"
 #include "Numerology/DayNumberModel.h"
 
-#include "ui_MainWindow.h"
+#include "ui_AndroidMainWindow.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -15,12 +15,12 @@ class MainWindow;
 }
 QT_END_NAMESPACE
 
-class MainWindow : public QMainWindow {
+class AndroidMainWindow : public QMainWindow {
     Q_OBJECT
 
 public:
-    MainWindow(QWidget * parent = nullptr);
-    ~MainWindow();
+    AndroidMainWindow(QWidget * parent = nullptr);
+    ~AndroidMainWindow();
 
 private slots:
     void on_pushButton_clicked();

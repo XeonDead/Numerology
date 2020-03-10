@@ -1,9 +1,9 @@
-#include "MainWindow.h"
+#include "AndroidMainWindow.h"
 
 #include <QStandardItemModel>
 #include <QtCharts/QLineSeries>
 
-MainWindow::MainWindow(QWidget * parent)
+AndroidMainWindow::AndroidMainWindow(QWidget * parent)
     : QMainWindow(parent),
     ui(new Ui::MainWindow),
     _descriptions(new Numerology::Descriptions(this)),
@@ -14,9 +14,9 @@ MainWindow::MainWindow(QWidget * parent)
     QMetaObject::connectSlotsByName(this);
 }
 
-MainWindow::~MainWindow(){ delete ui; }
+AndroidMainWindow::~AndroidMainWindow(){ delete ui; }
 
-void MainWindow::on_pushButton_clicked()
+void AndroidMainWindow::on_pushButton_clicked()
 {
     auto ui_dateEdit = findChild<QDateEdit *>("dateEdit");
     auto date        = ui_dateEdit->date();
@@ -86,12 +86,12 @@ void MainWindow::on_pushButton_clicked()
 
         ui_tableView->setModel(_culminationModel);
 
-        ui_tableView->setColumnWidth(0, 70);
-        ui_tableView->setColumnWidth(1, 40);
-        ui_tableView->setColumnWidth(2, 90);
-        ui_tableView->setColumnWidth(3, 30);
-        ui_tableView->setColumnWidth(4, 160);
-        ui_tableView->setColumnWidth(5, 30);
+        ui_tableView->setColumnWidth(0, 120);
+        ui_tableView->setColumnWidth(1, 120);
+        ui_tableView->setColumnWidth(2, 120);
+        ui_tableView->setColumnWidth(3, 120);
+        ui_tableView->setColumnWidth(4, 200);
+        ui_tableView->setColumnWidth(5, 160);
         ui_tableView->setEditTriggers(QTableView::EditTrigger::NoEditTriggers);
     } else if (ui_tabWidget->currentIndex() == 1) {
         auto ui_tableView = findChild<QTableView *>("dayNumberTableView");
