@@ -92,12 +92,19 @@ const QString DayNumberModel::getDateNumber(const DateNumberType &type,
   int thirdNumber = 0;
   int fourthNumber = 0;
 
+  auto qCharToInt = [](int x, QChar c) {
+      auto val = c.digitValue();
+      if (val != -1) {
+          return x+val;
+      } else {
+          return x;
+      }
+  };
+
   if (type != DateNumberType::BirthDay) {
     QString birthdayStringThisYear =
         date.toString("yyyy") + _birthDate.toString("MMdd");
-    for (const auto i : birthdayStringThisYear) {
-      if (i.isDigit()) firstNumber += i.digitValue();
-    }
+    firstNumber = std::accumulate(birthdayStringThisYear.begin(), birthdayStringThisYear.end(), 0, qCharToInt);
   }
 
   QString dateString;
@@ -119,19 +126,15 @@ const QString DayNumberModel::getDateNumber(const DateNumberType &type,
     }
   }
 
-  for (const auto i : dateString) {
-    if (i.isDigit()) firstNumber += i.digitValue();
-  }
+  firstNumber += std::accumulate(dateString.begin(), dateString.end(), 0, qCharToInt);
+  QString firstNumStr = QString("%1").arg(firstNumber);
 
-  for (const auto i : QString("%1").arg(firstNumber)) {
-    if (i.isDigit()) secondNumber += i.digitValue();
-  }
+  secondNumber += std::accumulate(firstNumStr.begin(), firstNumStr.end(), 0, qCharToInt);
 
-  thirdNumber = firstNumber - (date.toString("d").front().digitValue() * 2);
+  thirdNumber += firstNumber - (_birthDate.toString("d").front().digitValue() * 2);
+  QString thirdNumStr = QString("%1").arg(thirdNumber);
 
-  for (const auto i : QString("%1").arg(thirdNumber)) {
-    if (i.isDigit()) fourthNumber += i.digitValue();
-  }
+  fourthNumber += std::accumulate(thirdNumStr.begin(), thirdNumStr.end(), 0, qCharToInt);
 
   return QString("%1.%2.%3.%4")
       .arg(firstNumber)
