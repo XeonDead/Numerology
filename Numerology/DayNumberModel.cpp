@@ -131,7 +131,7 @@ const QString DayNumberModel::getDateNumber(const DateNumberType &type,
 
   secondNumber += std::accumulate(firstNumStr.begin(), firstNumStr.end(), 0, qCharToInt);
 
-  thirdNumber += firstNumber - (_birthDate.toString("d").front().digitValue() * 2);
+  thirdNumber += std::abs(firstNumber - (_birthDate.toString("d").front().digitValue() * 2));
   QString thirdNumStr = QString("%1").arg(thirdNumber);
 
   fourthNumber += std::accumulate(thirdNumStr.begin(), thirdNumStr.end(), 0, qCharToInt);
