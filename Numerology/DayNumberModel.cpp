@@ -55,6 +55,24 @@ int DayNumberModel::columnCount(const QModelIndex &parent) const {
 
 void DayNumberModel::clear() { _numbers.clear(); }
 
+bool DayNumberModel::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+    Q_UNUSED(role)
+    Q_UNUSED(index)
+    if (!value.toString().contains(";")) {
+        QDate date = QDate::fromString(value.toString(), QString("dd.MM.yyyy"));
+        this->setBirthDate(date);
+        return true;
+    } else {
+        auto dates = value.toString().split(QString(";"), Qt::SkipEmptyParts);
+        QDate firstDate = QDate::fromString(dates.first(), QString("dd.MM.yyyy"));
+        QDate lastDate = QDate::fromString(dates.last(), QString("dd.MM.yyyy"));
+        this->setDateRange(firstDate, lastDate);
+        return true;
+    }
+    return false;
+}
+
 void DayNumberModel::setBirthDate(const QDate &birthDate) {
   _birthDate = birthDate;
   _numbers.push_back(
@@ -64,6 +82,7 @@ void DayNumberModel::setBirthDate(const QDate &birthDate) {
 
 void DayNumberModel::setDateRange(const QDate &firstDate,
                                   const QDate &secondDate) {
+  beginResetModel();
   int years = (secondDate.year() - firstDate.year()) + 1;
   int months = (secondDate.month() - firstDate.month()) + 1;
   int days = firstDate.daysTo(secondDate);
@@ -83,6 +102,8 @@ void DayNumberModel::setDateRange(const QDate &firstDate,
     _numbers.push_back(qMakePair(date.toString("dd.MM.yyyy"),
                                  getDateNumber(DateNumberType::Day, date)));
   }
+  endResetModel();
+  emit dataChanged(index(0, 0), index(rowCount() - 1, columnCount() - 1));
 }
 
 const QString DayNumberModel::getDateNumber(const DateNumberType &type,
@@ -130,6 +151,11 @@ const QString DayNumberModel::getDateNumber(const DateNumberType &type,
   QString firstNumStr = QString("%1").arg(firstNumber);
 
   secondNumber += std::accumulate(firstNumStr.begin(), firstNumStr.end(), 0, qCharToInt);
+  if (secondNumber % 10 > 0) {
+      int temp = secondNumber;
+      secondNumber  = secondNumber / 10;
+      secondNumber += temp % 10;
+  }
 
   thirdNumber += std::abs(firstNumber - (_birthDate.toString("d").front().digitValue() * 2));
   QString thirdNumStr = QString("%1").arg(thirdNumber);

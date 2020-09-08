@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.15)
 
 project(Numerology LANGUAGES CXX)
 
@@ -11,20 +11,23 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt5 COMPONENTS Widgets REQUIRED Charts REQUIRED PATHS E:/Qt/5.12.7/msvc2017_64/lib/cmake)
+find_package(Qt5 COMPONENTS Widgets Charts Core Quick LinguistTools Network PrintSupport REQUIRED)
+
+set (SOURCES
+    main.cpp
+    Numerology/Numerology.cpp
+    Numerology/Numerology.h
+    Numerology/CulminationModel.cpp
+    Numerology/CulminationModel.h
+    Numerology/DayNumberModel.cpp
+    Numerology/DayNumberModel.h
+    Numerology/BackendFunctions.cpp
+    Numerology/BackendFunctions.h)
 
 if (ANDROID)
     add_library(Numerology SHARED
-          main.cpp
-          AndroidMainWindow.cpp
-          AndroidMainWindow.h
-          AndroidMainWindow.ui
-          Numerology/Numerology.cpp
-          Numerology/Numerology.h
-          Numerology/CulminationModel.cpp
-          Numerology/CulminationModel.h
-          Numerology/DayNumberModel.cpp
-          Numerology/DayNumberModel.h
+          qml_android.qrc
+          ${SOURCES}
     )
     set(HEADERS Numerology)
 
@@ -41,25 +44,28 @@ if (ANDROID)
 
     set(ANDROID_PACKAGE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/android)
 
-    target_link_libraries(Numerology PRIVATE Qt5::Widgets Qt5::Charts ${GLES2_LIBRARY} z log)
+    target_link_libraries(Numerology PRIVATE ${GLES2_LIBRARY} z log
+      Qt5::Widgets
+      Qt5::Charts
+      Qt5::Core
+      Qt5::Quick
+      Qt5::Network)
 else()
     add_executable(Numerology
-      main.cpp
-      MainWindow.cpp
-      MainWindow.h
-      MainWindow.ui
-      Numerology/Numerology.cpp
-      Numerology/Numerology.h
-      Numerology/CulminationModel.cpp
-      Numerology/CulminationModel.h
-      Numerology/DayNumberModel.cpp
-      Numerology/DayNumberModel.h
+      qml.qrc
+      ${SOURCES}
     )
-    set(HEADERS Numerology)
+    set(HEADERS Numerology)    
 
-    target_link_libraries(Numerology PRIVATE Qt5::Widgets Qt5::Charts)
+target_link_libraries(Numerology PRIVATE
+    Qt5::Widgets
+    Qt5::Charts
+    Qt5::Core
+    Qt5::Quick
+    Qt5::Network)
 endif()
 
-file(COPY resources/ DESTINATION resources/)
+target_compile_definitions(Numerology
+  PRIVATE $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
 
-target_compile_definitions(Numerology PRIVATE $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
+file(COPY resources/ DESTINATION resources/)

@@ -3,14 +3,16 @@
 
 #include <QObject>
 #include <QAbstractTableModel>
+#include <qqml.h>
 
 namespace Numerology {
 using NumerologyPair = QPair<int, int>;
 
 class CulminationModel : public QAbstractTableModel
 {
+    QML_ELEMENT
 public:
-    CulminationModel(QObject * parent);
+    explicit CulminationModel(QObject *parent = nullptr);
 
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
@@ -18,8 +20,9 @@ public:
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
     void setRowCount(int rowCountNew);
     void clear();
+    bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
+    void setDate(const QDate &date);
 
-    void setDate(const QDate& date);
 private:
     int rowCountStore;
     QVector<NumerologyPair> peaks;

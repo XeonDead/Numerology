@@ -3,10 +3,12 @@
 
 #include <QtCore/QAbstractTableModel>
 #include <QtCore/QDate>
+#include <qqml.h>
 
 namespace Numerology {
 class DayNumberModel : public QAbstractTableModel
 {
+    QML_ELEMENT
     enum DateNumberType {
         BirthDay = 0,
         Day,
@@ -15,7 +17,7 @@ class DayNumberModel : public QAbstractTableModel
     };
 
 public:
-    DayNumberModel(QObject * parent);
+    explicit DayNumberModel(QObject * parent = nullptr);
 
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
@@ -23,6 +25,7 @@ public:
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
     void clear();
 
+    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
     void setBirthDate(const QDate& birthDate);
     void setDateRange(const QDate& firstDate, const QDate& secondDate);
 private:
