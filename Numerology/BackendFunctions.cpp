@@ -13,18 +13,7 @@ BackendFunctionEnergy::BackendFunctionEnergy(QQuickView *appViewer, QObject *par
     : QObject(parent),
     _appViewer(appViewer),
     _series(nullptr)
-{
-    _timer = new QTimer(this);
-    connect(_timer, &QTimer::timeout, this, &BackendFunctionEnergy::update);
-    _timer->start(1 / 60 * 1000);
-}
-
-void BackendFunctionEnergy::update() {
-    if (_series) {
-        QVector<QPointF> points = _data;
-        _series->replace(points);
-    }
-}
+{}
 
 void BackendFunctionEnergy::setSeries(QAbstractSeries *series) {
   if (series) {
@@ -35,6 +24,7 @@ void BackendFunctionEnergy::setSeries(QAbstractSeries *series) {
 void BackendFunctionEnergy::setEnergyData(const QString &input)
 {
     QDateTime date = QDateTime::fromString(input, QString("dd.MM.yyyy"));
+    if (!date.isValid()) return;
     QString energy =
       QString("%1")
       .arg(date.toString("ddMM").toInt() * date.toString("yyyy").toInt())

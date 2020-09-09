@@ -25,7 +25,7 @@ public:
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
     void clear();
 
-    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
+    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
     void setBirthDate(const QDate& birthDate);
     void setDateRange(const QDate& firstDate, const QDate& secondDate);
 private:

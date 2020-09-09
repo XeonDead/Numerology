@@ -26,12 +26,9 @@ public:
     Q_INVOKABLE void setEnergyData(const QString& input);
     Q_INVOKABLE int getFirstYear();
     Q_INVOKABLE int getLastYear();
-public slots:
-    void update();
 private:
     QQuickView *_appViewer;
     QXYSeries *_series;
-    QTimer *_timer;
     QVector<QPointF> _data;
 };
 

@@ -26,8 +26,8 @@ int main(int argc, char *argv[])
   #else
     QString extraImportPath(QStringLiteral("%1/../../../%2"));
   #endif
-    viewer.engine()->addImportPath(extraImportPath.arg(
-        QGuiApplication::applicationDirPath(), QString::fromLatin1("qml")));
+//    viewer.engine()->addImportPath(extraImportPath.arg(
+//        QGuiApplication::applicationDirPath(), QString::fromLatin1("qml")));
     QObject::connect(viewer.engine(), &QQmlEngine::quit, &viewer,
                      &QWindow::close);
 

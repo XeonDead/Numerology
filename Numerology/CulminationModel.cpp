@@ -7,7 +7,7 @@ using namespace Numerology;
 
 CulminationModel::CulminationModel(QObject *parent)
     : QAbstractTableModel(parent),
-    rowCountStore(7)
+    rowCountStore(4)
 { }
 
 QVariant CulminationModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -108,7 +108,11 @@ void CulminationModel::setRowCount(int rowCountNew)
 
 void CulminationModel::clear()
 {
-    rowCountStore = 7;
+    if (rowCountStore == 7) {
+        beginRemoveRows(QModelIndex(), 4, 6);
+        rowCountStore = 4;
+        endRemoveRows();
+    }
     peaks.clear();
     challenges.clear();
     shadows.clear();
@@ -127,7 +131,7 @@ bool CulminationModel::setData(const QModelIndex &index, const QVariant &value, 
 
 void CulminationModel::setDate(const QDate& date)
 {
-    beginResetModel();
+    this->clear();
     auto dayNumber   = Numerology::sumNumbers(date.day());
     auto monthNumber = Numerology::sumNumbers(date.month());
     auto yearNumber  = Numerology::sumNumbers(date.year());
@@ -151,6 +155,8 @@ void CulminationModel::setDate(const QDate& date)
 
     if ((QDate::currentDate().year() - date.year()) > strList.at(4).right(2).toInt()) {
         rowCountStore = 7;
+        beginInsertRows(QModelIndex(), 4, 6);
+        endInsertRows();
     }
 
     peaks.push_back(Numerology::sumNumbers(dayNumber.second + monthNumber.second));
@@ -184,6 +190,5 @@ void CulminationModel::setDate(const QDate& date)
         exits.push_back((Numerology::sumNumbers(peaks.at(i).second + challenges.at(i).second + shadows.at(i).second)));
     }
 
-    endResetModel();
-    emit dataChanged(index(0, 0), index(rowCount() - 1, columnCount() - 1));
+    emit dataChanged(index(0, 0), index(rowCountStore - 1, 5));
 } // CulminationModel::setDate

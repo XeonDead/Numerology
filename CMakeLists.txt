@@ -11,7 +11,14 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt5 COMPONENTS Widgets Charts Core Quick LinguistTools Network PrintSupport REQUIRED)
+find_package(Qt5
+    CONFIG REQUIRED
+    COMPONENTS
+        Core
+        Widgets
+        Charts
+        Quick
+        LinguistTools)
 
 set (SOURCES
     main.cpp
@@ -25,10 +32,14 @@ set (SOURCES
     Numerology/BackendFunctions.h)
 
 if (ANDROID)
+    set (RESOURCES
+        qml_android.qrc)
+
     add_library(Numerology SHARED
-          qml_android.qrc
-          ${SOURCES}
+        ${RESOURCES}
+        ${SOURCES}
     )
+
     set(HEADERS Numerology)
 
     link_directories(/opt/android-libs/aarch64)
@@ -48,21 +59,23 @@ if (ANDROID)
       Qt5::Widgets
       Qt5::Charts
       Qt5::Core
-      Qt5::Quick
-      Qt5::Network)
+      Qt5::Quick)
 else()
+    set (RESOURCES
+        qml.qrc)
+
     add_executable(Numerology
-      qml.qrc
-      ${SOURCES}
+        ${RESOURCES}
+        ${SOURCES}
     )
-    set(HEADERS Numerology)    
+    
+    set(HEADERS Numerology)
 
 target_link_libraries(Numerology PRIVATE
     Qt5::Widgets
     Qt5::Charts
     Qt5::Core
-    Qt5::Quick
-    Qt5::Network)
+    Qt5::Quick)
 endif()
 
 target_compile_definitions(Numerology

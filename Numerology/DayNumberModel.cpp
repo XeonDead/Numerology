@@ -53,7 +53,11 @@ int DayNumberModel::columnCount(const QModelIndex &parent) const {
   return 2;
 }
 
-void DayNumberModel::clear() { _numbers.clear(); }
+void DayNumberModel::clear() {
+    beginRemoveRows(QModelIndex(), 0, _numbers.size() - 1);
+    _numbers.clear();
+    endRemoveRows();
+}
 
 bool DayNumberModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
@@ -61,13 +65,21 @@ bool DayNumberModel::setData(const QModelIndex &index, const QVariant &value, in
     Q_UNUSED(index)
     if (!value.toString().contains(";")) {
         QDate date = QDate::fromString(value.toString(), QString("dd.MM.yyyy"));
-        this->setBirthDate(date);
+        if (date.isValid()) {
+          this->setBirthDate(date);
+        } else {
+          return false;
+        }
         return true;
     } else {
         auto dates = value.toString().split(QString(";"), Qt::SkipEmptyParts);
         QDate firstDate = QDate::fromString(dates.first(), QString("dd.MM.yyyy"));
         QDate lastDate = QDate::fromString(dates.last(), QString("dd.MM.yyyy"));
-        this->setDateRange(firstDate, lastDate);
+        if (firstDate.isValid() && lastDate.isValid()) {
+          this->setDateRange(firstDate, lastDate);
+        } else {
+          return false;
+        }
         return true;
     }
     return false;
@@ -82,10 +94,11 @@ void DayNumberModel::setBirthDate(const QDate &birthDate) {
 
 void DayNumberModel::setDateRange(const QDate &firstDate,
                                   const QDate &secondDate) {
-  beginResetModel();
+  this->clear();
   int years = (secondDate.year() - firstDate.year()) + 1;
   int months = (secondDate.month() - firstDate.month()) + 1;
   int days = firstDate.daysTo(secondDate);
+  beginInsertRows(QModelIndex(), 0, years+months+days-1);
 
   for (int i = 0; i < years; ++i) {
     QDate date = firstDate.addYears(i);
@@ -102,7 +115,7 @@ void DayNumberModel::setDateRange(const QDate &firstDate,
     _numbers.push_back(qMakePair(date.toString("dd.MM.yyyy"),
                                  getDateNumber(DateNumberType::Day, date)));
   }
-  endResetModel();
+  endInsertRows();
   emit dataChanged(index(0, 0), index(rowCount() - 1, columnCount() - 1));
 }
 
