@@ -18,7 +18,6 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     int rowCount(const QModelIndex &parent    = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
-    void setRowCount(int rowCountNew);
     void clear();
     bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
     void setDate(const QDate &date);

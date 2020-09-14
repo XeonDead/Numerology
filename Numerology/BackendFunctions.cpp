@@ -41,6 +41,7 @@ void BackendFunctionEnergy::setEnergyData(const QString &input)
     QQmlProperty(axisX, "min").write(year.startOfDay());
 
     _data.clear();
+    _series->clear();
     for (const auto &i : energy.split(QString(), Qt::SkipEmptyParts)) {
         _series->append(year.year(), i.toDouble());
         _data.append(QPointF(year.year(), i.toDouble()));

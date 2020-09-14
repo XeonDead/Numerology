@@ -11,8 +11,8 @@ import DayNumberModel 0.1
 
 Item {
     id: main
-    width: 800
-    height: 800
+    width: 1200
+    height: 600
     visible: true
     property date now: new Date()
 
@@ -154,22 +154,26 @@ Item {
         x: 0
         y: 87
         width: parent.width
-        height: 714
+        height: 513
         currentIndex: tabBar.currentIndex
 
         Item {
             id: culminationCycleTab
-            ColumnLayout {
+            Layout.alignment: Qt.AlignTop | Qt.AlignLeft
+            RowLayout {
                 id: columnLayout
                 x: 0
                 y: 0
 
                 ChartView {
                     id: dateEnergyView
+                    x: 0
+                    y: 0
                     width: 400
                     height: 300
                     antialiasing: true
                     legend.visible: false
+                    Layout.alignment: Qt.AlignTop | Qt.AlignLeft
                     animationOptions: ChartView.NoAnimation
                     theme: ChartView.ChartThemeQt
                     property bool openGL: true
@@ -210,6 +214,7 @@ Item {
                     y: 310
                     width: 600
                     height: 500
+                    Layout.alignment: Qt.AlignTop | Qt.AlignLeft
                     leftMargin: rowsHeader.implicitWidth
                     topMargin: columnsHeader.implicitHeight
                     clip: true
@@ -222,6 +227,7 @@ Item {
                     model: CulminationModel {}
 
                     delegate: Rectangle {
+                        implicitHeight: 50
                         Text {
                             text: display
                             anchors.fill: parent
@@ -290,7 +296,6 @@ Item {
                 }
             }
         }
-
         Item {
             id: dayNumberTab
 
@@ -301,6 +306,7 @@ Item {
 
                 RowLayout {
                     id: dayNumberRowLayout
+                    Layout.alignment: Qt.AlignTop | Qt.AlignLeft
                     TextField {
                         id: dayNumberFirst
                         placeholderText: qsTr("Дата начала периода")
@@ -478,20 +484,20 @@ Item {
                 TableView {
                     id: dayNumberTableView
                     x: 0
-                    y: 0
                     width: 200
-                    height: 600
+                    height: 450
                     clip: true
+                    Layout.alignment: Qt.AlignTop | Qt.AlignLeft
                     ScrollBar.vertical: ScrollBar {}
 
                     property var columnWidths: [100, 100]
                     columnWidthProvider: function (column) {
                         return columnWidths[column]
                     }
-
                     model: DayNumberModel {}
 
                     delegate: Rectangle {
+                        implicitHeight: 50
                         Text {
                             text: display
                             anchors.fill: parent
@@ -506,3 +512,10 @@ Item {
         }
     }
 }
+
+/*##^##
+Designer {
+    D{i:0;formeditorZoom:0.75}
+}
+##^##*/
+

@@ -31,14 +31,14 @@ QVariant DayNumberModel::data(const QModelIndex &index, int role) const {
   if (role != Qt::DisplayRole) {
     return QVariant();
   } else {
-    switch (index.column()) {
+      switch (index.column()) {
       case 0: {
         return _numbers.at(index.row()).first;
       }
       case 1: {
         return _numbers.at(index.row()).second;
       }
-    }
+      }
   }
   return QVariant();
 }  // DayNumberModel::data
@@ -98,8 +98,10 @@ void DayNumberModel::setDateRange(const QDate &firstDate,
   int years = (secondDate.year() - firstDate.year()) + 1;
   int months = (secondDate.month() - firstDate.month()) + 1;
   int days = firstDate.daysTo(secondDate);
-  beginInsertRows(QModelIndex(), 0, years+months+days-1);
+  beginInsertRows(QModelIndex(), 0, years + months + days - 1);
 
+  _numbers.push_back(qMakePair(_birthDate.toString("dd.MM.yyyy"),
+                               getDateNumber(DateNumberType::BirthDay, _birthDate)));
   for (int i = 0; i < years; ++i) {
     QDate date = firstDate.addYears(i);
     _numbers.push_back(qMakePair(date.toString("yyyy"),
@@ -164,7 +166,7 @@ const QString DayNumberModel::getDateNumber(const DateNumberType &type,
   QString firstNumStr = QString("%1").arg(firstNumber);
 
   secondNumber += std::accumulate(firstNumStr.begin(), firstNumStr.end(), 0, qCharToInt);
-  if (secondNumber % 10 > 0) {
+  if (secondNumber > 25 && secondNumber % 10 > 0) {
       int temp = secondNumber;
       secondNumber  = secondNumber / 10;
       secondNumber += temp % 10;

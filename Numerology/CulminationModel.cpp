@@ -101,11 +101,6 @@ int CulminationModel::columnCount(const QModelIndex &parent) const
     return 6;
 }
 
-void CulminationModel::setRowCount(int rowCountNew)
-{
-    rowCountStore = rowCountNew;
-}
-
 void CulminationModel::clear()
 {
     if (rowCountStore == 7) {
@@ -153,7 +148,7 @@ void CulminationModel::setDate(const QDate& date)
         }
     }
 
-    if ((QDate::currentDate().year() - date.year()) > strList.at(4).right(2).toInt()) {
+    if ((QDate::currentDate().year() - date.year()) >= strList.at(3).right(2).toInt()) {
         rowCountStore = 7;
         beginInsertRows(QModelIndex(), 4, 6);
         endInsertRows();
