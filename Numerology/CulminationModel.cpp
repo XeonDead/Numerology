@@ -86,7 +86,7 @@ QVariant CulminationModel::data(const QModelIndex &index, int role) const
             }
         }
     }
-    return QVariant();
+    return QString("");
 } // CulminationModel::data
 
 int CulminationModel::rowCount(const QModelIndex &parent) const

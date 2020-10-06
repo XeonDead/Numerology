@@ -21,15 +21,15 @@ QVariant DayNumberModel::headerData(int section, Qt::Orientation orientation,
         }
       }
     } else {
-      return QVariant();
+        return QString("");
     }
   }
-  return QVariant();
+  return QString("");
 }
 
 QVariant DayNumberModel::data(const QModelIndex &index, int role) const {
   if (role != Qt::DisplayRole) {
-    return QVariant();
+      return QString("");
   } else {
       switch (index.column()) {
       case 0: {
@@ -40,7 +40,7 @@ QVariant DayNumberModel::data(const QModelIndex &index, int role) const {
       }
       }
   }
-  return QVariant();
+  return QString("");
 }  // DayNumberModel::data
 
 int DayNumberModel::rowCount(const QModelIndex &parent) const {
@@ -131,9 +131,18 @@ const QString DayNumberModel::getDateNumber(const DateNumberType &type,
   auto qCharToInt = [](int x, QChar c) {
       auto val = c.digitValue();
       if (val != -1) {
-          return x+val;
+          return x + val;
       } else {
           return x;
+      }
+  };
+
+  auto qCharToIntDropNine = [](int x, QChar c) {
+      auto val = c.digitValue();
+      if (val == -1 || val == 9) {
+          return x;
+      } else {
+          return x + val;
       }
   };
 
@@ -165,12 +174,7 @@ const QString DayNumberModel::getDateNumber(const DateNumberType &type,
   firstNumber += std::accumulate(dateString.begin(), dateString.end(), 0, qCharToInt);
   QString firstNumStr = QString("%1").arg(firstNumber);
 
-  secondNumber += std::accumulate(firstNumStr.begin(), firstNumStr.end(), 0, qCharToInt);
-  if (secondNumber > 25 && secondNumber % 10 > 0) {
-      int temp = secondNumber;
-      secondNumber  = secondNumber / 10;
-      secondNumber += temp % 10;
-  }
+  secondNumber += std::accumulate(firstNumStr.begin(), firstNumStr.end(), 0, qCharToIntDropNine);
 
   thirdNumber += std::abs(firstNumber - (_birthDate.toString("d").front().digitValue() * 2));
   QString thirdNumStr = QString("%1").arg(thirdNumber);
